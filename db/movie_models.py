@@ -40,6 +40,8 @@ class MovieData(Base):
     directors = relationship("Director", secondary="movie_directors", back_populates="movies")
     genres = relationship("Genre", secondary="movie_genres", back_populates="movies")
     countries = relationship("Country", secondary="movie_countries", back_populates="movies")
+    studios = relationship("Studio", secondary="movie_studios", back_populates="movies")
+    distributors = relationship("Distributor", secondary="movie_distributors", back_populates="movies")
 
 
 
@@ -95,6 +97,33 @@ class MovieGenres(Base):
     __tablename__ = 'movie_genres'
     movie_id = Column(Integer, ForeignKey('movies.id'), primary_key=True)
     genre_id = Column(Integer, ForeignKey('genres.id'), primary_key=True)
+
+
+
+class Studio(Base):
+    __tablename__ = "studios"
+    id = Column(Integer, primary_key=True)
+    studio_name = Column(String(100), unique=True, nullable=False)
+    movies = relationship("MovieData", secondary="movie_studios", back_populates="studios")
+
+class MovieStudios(Base):
+    __tablename__ = 'movie_studios'
+    movie_id = Column(Integer, ForeignKey('movies.id'), primary_key=True)
+    studio_id = Column(Integer, ForeignKey('studios.id'), primary_key=True)
+
+
+
+class Distributor(Base):
+    __tablename__ = "distributors"
+    id = Column(Integer, primary_key=True)
+    distributor_name = Column(String(100), unique=True, nullable=False)
+    movies = relationship("MovieData", secondary="movie_distributors", back_populates="distributors")
+
+class MovieDistributors(Base):
+    __tablename__ = 'movie_distributors'
+    movie_id = Column(Integer, ForeignKey('movies.id'), primary_key=True)
+    distributor_id = Column(Integer, ForeignKey('distributors.id'), primary_key=True)
+
 
 
 # --- CREATE ENGINE ---
