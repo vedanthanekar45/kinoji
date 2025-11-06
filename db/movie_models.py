@@ -41,7 +41,7 @@ class MovieData(Base):
     genres = relationship("Genre", secondary="movie_genres", back_populates="movies")
     countries = relationship("Country", secondary="movie_countries", back_populates="movies")
     studios = relationship("Studio", secondary="movie_studios", back_populates="movies")
-    distributors = relationship("Distributor", secondary="movie_distributors", back_populates="movies")
+    languages = relationship("Language", secondary="movie_languages", back_populates="movies")
 
 
 
@@ -113,17 +113,17 @@ class MovieStudios(Base):
     studio_id = Column(Integer, ForeignKey('studios.id'), primary_key=True)
 
 
-
-class Distributor(Base):
-    __tablename__ = "distributors"
+class Language(Base):
+    __tablename__ = "languages"
     id = Column(Integer, primary_key=True)
-    distributor_name = Column(String(100), unique=True, nullable=False)
-    movies = relationship("MovieData", secondary="movie_distributors", back_populates="distributors")
+    iso_639_1 = Column(String(2), unique=True, nullable=False)
+    name = Column(String(100), nullable=False)
+    movies = relationship("MovieData", secondary="movie_languages", back_populates="languages")
 
-class MovieDistributors(Base):
-    __tablename__ = 'movie_distributors'
+class MovieLanguages(Base):
+    __tablename__ = "movie_languages"
     movie_id = Column(Integer, ForeignKey('movies.id'), primary_key=True)
-    distributor_id = Column(Integer, ForeignKey('distributors.id'), primary_key=True)
+    language_id = Column(Integer, ForeignKey('languages.id'), primary_key=True)
 
 
 
