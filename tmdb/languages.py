@@ -32,7 +32,7 @@ try:
     for language_data in data:
         new_language = Language(
             iso_639_1 = language_data['iso_639_1'],
-            country_name = language_data['name']
+            name = language_data['name']
         )
         session.add(new_language)
     
