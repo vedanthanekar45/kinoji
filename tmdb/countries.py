@@ -26,14 +26,18 @@ data = response.json()
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Inserting Data into the database
 try:
+    existing_codes_query = session.query(Country.iso_3166_1).all()
+    existing_codes = {code[0] for code in existing_codes_query}
+    iso_code = data['iso_3166_1']
+
     for country_data in data:
-        new_country = Country(
-            iso_3166_1 = country_data['iso_3166_1'],
-            country_name = country_data['english_name']
-        )
-        session.add(new_country)
+        if iso_code not in existing_codes:
+            new_country = Country(
+                iso_3166_1 = country_data['iso_3166_1'],
+                country_name = country_data['english_name']
+            )
+            session.add(new_country)
     
     session.commit()
     print("Successfully added countries to the database!")

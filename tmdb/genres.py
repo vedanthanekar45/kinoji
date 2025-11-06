@@ -29,7 +29,6 @@ print(data)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Inserting Data into the database
 try:
     for genres_data in genres_list:
         new_genre = Genre(

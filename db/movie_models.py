@@ -78,7 +78,7 @@ class Country(Base):
     __tablename__ = "countries"
     id = Column(Integer, primary_key=True)
     iso_3166_1 = Column(String(2), unique=True, nullable=False)
-    country_name = Column(String(100), unique=True, nullable=False)
+    country_name = Column(String(100), nullable=False)
     movies = relationship("MovieData", secondary="movie_countries", back_populates="countries")
 
 class MovieCountry(Base):
