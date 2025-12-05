@@ -21,7 +21,7 @@ output_file = "target_ids.txt"
 
 print("Starting Robust Collection...")
 
-for year in range(2020, 2026):
+for year in range(1920, 2026):
     print(f"Scanning Year: {year}...")
     year_ids = set()
 
