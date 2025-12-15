@@ -15,7 +15,7 @@ if DATABASE_URL is None:
 ## --- ENUM TYPES ---
 
 """ This class is defined to provide he options for Enum type used in the 
-    Gender column of the Actors table """
+    Gender column of the Actors table. Quite a long sentence, was it? """
 class Genders(enum.Enum):
     M = "Male"
     F = "Female"
