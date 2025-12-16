@@ -24,23 +24,38 @@ db_session = Session()
 
 
 def get_or_create(session, model, id, name, gender_enum=None):
+    # First check by ID
     instance = session.query(model).filter_by(id=id).first()
     if instance:
         return instance
+    
+    # For Studio, also check by name (since studio_name has unique constraint)
+    if model == Studio:
+        instance = session.query(model).filter_by(studio_name=name).first()
+        if instance:
+            return instance
+    
+    # Create new instance
+    params = {'id': id}
+    if model == Studio:
+        params['studio_name'] = name
     else:
-        params = {'id': id}
-        if model == Studio:
-            params['studio_name'] = name
-        else:
-            params['name'] = name
-            
-        if gender_enum: 
-            params['gender'] = gender_enum
-            
+        params['name'] = name
+        
+    if gender_enum: 
+        params['gender'] = gender_enum
+    
+    try:
         instance = model(**params)
         session.add(instance)
         session.flush()
         return instance
+    except Exception:
+        session.rollback()
+        # If insert failed, try to fetch again (race condition)
+        if model == Studio:
+            return session.query(model).filter_by(studio_name=name).first()
+        return session.query(model).filter_by(id=id).first()
     
 def map_gender(tmdb_code):
     if tmdb_code == 1: return Genders.F
@@ -55,7 +70,7 @@ try:
     country_map = {c.iso_3166_1: c for c in db_session.query(Country).all()}
     print(f"   Loaded {len(lang_map)} langs, {len(genre_map)} genres, {len(country_map)} countries.")
     
-    input_file = "target_ids.txt"
+    input_file = "target_resume.txt"
     print(f"Reading input file.. ")
     with open(input_file, "r") as f:
         all_ids = [line.strip() for line in f.readlines() if line.strip()]
@@ -105,7 +120,10 @@ try:
             for l in data.get('spoken_languages', []):
                 if l['iso_639_1'] in lang_map: new_movie.languages.append(lang_map[l['iso_639_1']])
 
+            seen_studios = set()
             for company in data.get('production_companies', []):
+                if company['id'] in seen_studios:
+                    continue
                 studio = get_or_create(db_session, Studio, id=company['id'], name=company['name'])
                 new_movie.studios.append(studio)
 
