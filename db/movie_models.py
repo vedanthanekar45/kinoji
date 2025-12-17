@@ -1,7 +1,7 @@
 import os
 import enum
 from dotenv import load_dotenv
-from sqlalchemy import ForeignKey, Integer, BigInteger, String, Date, Column, create_engine
+from sqlalchemy import ForeignKey, Integer, Float, String, Date, Column, create_engine
 from sqlalchemy.types import Enum
 from sqlalchemy.orm import DeclarativeBase, relationship, sessionmaker
 
@@ -34,8 +34,7 @@ class MovieData(Base):
     name = Column(String(200))
     release = Column(Date)
     runtime_minutes = Column(Integer)
-    budget = Column(BigInteger)
-    revenue = Column(BigInteger)
+    rating_out_of_five = Column(Float, nullable=True)
     cast = relationship("Actor", secondary="movie_actors", back_populates="movies")
     directors = relationship("Director", secondary="movie_directors", back_populates="movies")
     genres = relationship("Genre", secondary="movie_genres", back_populates="movies")
