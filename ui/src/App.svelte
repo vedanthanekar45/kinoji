@@ -19,8 +19,18 @@
     <h1>Decoding the DNA of Cinema</h1>
     
     <div class="search-container">
-      <input type="text" placeholder="Generate insights with AI or click one of the buttons below.." class="search-input" />
+      <div class="search-wrapper">
+        <input type="text" placeholder="Generate insights with AI.." class="search-input" />
+        <button class="send-btn" aria-label="Send">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
     </div>
+
+    <p class="options-text">Or choose one of the options below</p>
 
     <div class="buttons-container">
       <button class="btn btn-primary">Go to Dashboard</button>
@@ -72,12 +82,17 @@
     padding: 0 1rem;
   }
 
-  .search-input {
+  .search-wrapper {
+    position: relative;
     width: 100%;
     max-width: 600px;
-    padding: 0.75rem 1rem;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 0.75rem 3rem 0.75rem 1rem;
     border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px 8px 8px 8px;
+    border-radius: 8px;
     background: rgba(255, 255, 255, 0.1);
     color: white;
     font-size: 1rem;
@@ -87,6 +102,26 @@
 
   .search-input::placeholder {
     color: rgba(255, 255, 255, 0.5);
+  }
+
+  .send-btn {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+  }
+
+  .send-btn:hover {
+    color: white;
   }
 
   /* Buttons */
@@ -135,6 +170,12 @@
     font-size: 0.9rem;
   }
 
+  .options-text {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
   /* GitHub link */
   .github-link {
     position: absolute;
@@ -152,6 +193,10 @@
 
   /* Mobile styles */
   @media (max-width: 600px) {
+    .landing {
+      background-image: url('/kinoji_mob.png');
+    }
+
     h1 {
       margin-bottom: 1rem;
     }
