@@ -69,7 +69,7 @@
 
   h1 {
     font-size: clamp(1.75rem, 5vw, 3.5rem);
-    font-weight: 700;
+    font-weight: 100;
     color: white;
     margin-bottom: 1.5rem;
   }
