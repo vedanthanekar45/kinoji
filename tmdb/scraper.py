@@ -53,10 +53,6 @@ def update_to_db(rating_dict):
 
 
 def scrape_letterboxd_ratings(tmdb_ids: list[int], delay: float = 0.5, batch_size: int = 50):
-    """
-    Scrape Letterboxd ratings in batches. After every batch_size ratings,
-    update the database and clear the dictionary.
-    """
     ratings = {}
     total_updated = 0
     batch_num = 1
@@ -71,7 +67,6 @@ def scrape_letterboxd_ratings(tmdb_ids: list[int], delay: float = 0.5, batch_siz
         else:
             print(f"  -> No rating found")
         
-        # When we have batch_size ratings, update DB and clear
         if len(ratings) >= batch_size:
             print(f"\n{'='*50}")
             print(f"BATCH {batch_num}: Updating {len(ratings)} ratings to database...")
@@ -86,7 +81,6 @@ def scrape_letterboxd_ratings(tmdb_ids: list[int], delay: float = 0.5, batch_siz
         if i < len(tmdb_ids) - 1:
             time.sleep(delay)
     
-    # Update any remaining ratings that didn't fill a complete batch
     if ratings:
         print(f"\n{'='*50}")
         print(f"FINAL BATCH: Updating remaining {len(ratings)} ratings to database...")
@@ -106,7 +100,5 @@ if __name__ == "__main__":
         tmdb_ids = [int(line.strip()) for line in f if line.strip()]
     
     print(f"Scraping ratings for {len(tmdb_ids)} movies in batches of 50...\n")
-    
-    total = scrape_letterboxd_ratings(tmdb_ids, delay=0.5, batch_size=50)
-    
+    total = scrape_letterboxd_ratings(tmdb_ids, delay=0.5, batch_size=50) 
     print(f"\nDone! Updated {total} movie ratings.")
