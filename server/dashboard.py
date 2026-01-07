@@ -48,7 +48,7 @@ def avg_runtime_per_decade(db: Session):
 
     return results
 
-# This one get the average ratings by users for each decade..
+# This one gets the average ratings by users for each decade..
 def avg_rating_per_decade(db: Session):
     results = db.query(
         (func.floor(cast(extract('year', MovieData.release), Integer) / 10) * 10).label("decade"),
@@ -60,4 +60,12 @@ def avg_rating_per_decade(db: Session):
     .order_by("decade")\
     .all()
 
+    return results
+
+# This one gets the number of movies by year (will be shown using a line graph, or a curve)..
+def movies_per_year(db: Session):
+    results = db.query(
+        extract('year', MovieData.release).label("year"),
+        func.count(MovieData.id).label("count")
+    ).filter(MovieData.release != None).group_by("year").order_by("year").all()
     return results

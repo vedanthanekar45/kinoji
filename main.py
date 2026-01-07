@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 # Backend imports
 from server.search_and_filter import search_and_filter
-from server.dashboard import top_row, format_time, avg_runtime_per_decade, avg_rating_per_decade
+from server.dashboard import top_row, format_time, avg_runtime_per_decade, avg_rating_per_decade, movies_per_year
 from server import db as database
 
 load_dotenv()
@@ -69,6 +69,17 @@ def rating_per_decade(db: Session = Depends(database.get_db)):
     ]
     return data
 
+@app.get('/dashboard/movies-per-year')
+def movies_per_year_count(db: Session = Depends(database.get_db)):
+    stats = movies_per_year(db)
+    data = [
+        {
+            "year": row.year,
+            "count": row.count
+        }
+        for row in stats
+    ]
+    return data
 
 '''
 Below this, contains all the stuff I'm gonna do with AI,
