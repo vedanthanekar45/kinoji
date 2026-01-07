@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 # Backend imports
 from server.search_and_filter import search_and_filter
+from server.dashboard import top_row, format_time
 from server import db as database
 
 load_dotenv()
@@ -14,7 +15,6 @@ load_dotenv()
 app = FastAPI()
 
 @app.get("/search")
-
 def search_filter_endpoint(
     title: Optional[str] = None,
     genres: Optional[List[str]] = None,
@@ -25,6 +25,26 @@ def search_filter_endpoint(
     results = search_and_filter(db, title=title, genres=genres, min_rating=min_rating, year=year)
     return results
     
+
+# -- Dashboard Endpoints --
+
+@app.get("/dashboard/top-row")
+def get_top_row_stats (db: Session = Depends(database.get_db)):
+    stats, oldest = top_row(db)
+    data = {
+        "library_size": stats.total_movies,
+        "total_watch_time": format_time(stats.total_runtime),
+        "global_rating": round(stats.avg_movie_rating, 2) if stats.avg_movie_rating else 0.0,
+        "oldest_movie": {
+            "title": oldest.name if oldest else "Unknown",
+            "year": oldest.release.year if oldest else 0,
+            "date": str(oldest.release) if oldest else None
+        }
+    }
+    return data
+
+
+
 
 '''
 Below this, contains all the stuff I'm gonna do with AI,
