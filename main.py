@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 # Backend imports
 from server.search_and_filter import search_and_filter
-from server.dashboard import top_row, format_time, avg_runtime_per_decade, avg_rating_per_decade, movies_per_year
+from server.dashboard import top_row, format_time, avg_runtime_per_year, avg_rating_per_decade, movies_per_year
 from server import db as database
 
 load_dotenv()
@@ -43,14 +43,13 @@ def get_top_row_stats (db: Session = Depends(database.get_db)):
     }
     return data
 
-@app.get("/dashboard/avg-runtime-decade")
-def runtime_per_decade(db: Session = Depends(database.get_db)):
-    stats = avg_runtime_per_decade(db)
+@app.get("/dashboard/avg-runtime-year")
+def runtime_per_year(db: Session = Depends(database.get_db)):
+    stats = avg_runtime_per_year(db)
     data = [
         {
-            "decade": int(row.decade),
+            "year": row.year,
             "runtime": round(row.avg_runtime, 2),
-            "movies": row.count
         }
         for row in stats
     ]

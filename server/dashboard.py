@@ -35,15 +35,14 @@ def top_row(db: Session):
     return stats, oldest_movie
 
 # This one gets average runtime for each decade..
-def avg_runtime_per_decade(db: Session):
+def avg_runtime_per_year(db: Session):
     results = db.query(
-        (func.floor(cast(extract('year', MovieData.release), Integer) / 10) * 10).label("decade"),
+        extract('year', MovieData.release).label("year"),
         func.avg(MovieData.runtime_minutes).label("avg_runtime"),
-        func.count(MovieData.id).label("count")
     )\
     .filter(MovieData.release != None)\
-    .group_by("decade")\
-    .order_by("decade")\
+    .group_by("year")\
+    .order_by("year")\
     .all()
 
     return results
@@ -69,3 +68,4 @@ def movies_per_year(db: Session):
         func.count(MovieData.id).label("count")
     ).filter(MovieData.release != None).group_by("year").order_by("year").all()
     return results
+
