@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 # Backend imports
 from server.search_and_filter import search_and_filter
-from server.dashboard import top_row, format_time, avg_runtime_per_year, avg_rating_per_decade, movies_per_year
+from server.dashboard import top_row, format_time, avg_runtime_per_year, avg_rating_per_decade, movies_per_year, top_genres_movies, top_genres_rating
 from server import db as database
 
 load_dotenv()
@@ -81,12 +81,24 @@ def movies_per_year_count(db: Session = Depends(database.get_db)):
     return data
 
 @app.get('/dashboard/top_genres_by_movies')
-def top_genres_by_movies(db: Session = Depends(database.get_id)):
-    stats = top_genres_by_movies(db)
+def top_genres_by_movies(db: Session = Depends(database.get_db)):
+    stats = top_genres_movies(db)
     data = [
         {
             "genre": row.genre,
             "count": row.total_movies,
+        }
+        for row in stats
+    ]
+    return data
+
+@app.get('/dashboard/top_genres_by_rating')
+def top_genres_by_rating(db: Session = Depends(database.get_db)):
+    stats = top_genres_rating(db)
+    data = [
+        {
+            "genre": row.genre,
+            "average_rating": row.avg_rating,
         }
         for row in stats
     ]

@@ -1,7 +1,7 @@
 import os
 import sys
 from sqlalchemy.orm import Session
-from sqlalchemy import func, extract, cast, Integer, asc, desc
+from sqlalchemy import func, extract, cast, Integer, Numeric, asc, desc
 from db.movie_models import MovieData, Genre, MovieGenres
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -73,9 +73,26 @@ def movies_per_year(db: Session):
 def top_genres_movies(db: Session, limit: int = 10):
     results = db.query(
         Genre.genre_name.label("genre"),
-        func.count(MovieGenres.c.movies_id).label("total_movies")
-    ).join(MovieGenres)\
+        func.count(MovieGenres.movie_id).label("total_movies")
+    ).join(MovieGenres, Genre.id == MovieGenres.genre_id)\
     .group_by(Genre.genre_name).order_by(desc("total_movies"))\
     .limit(limit).all()
+
+    return results
+
+# This endpoint gets the Top 10 genres by average rating (Bar chart)..
+def top_genres_rating(db: Session, limit: int = 10, min_movies: int = 50):
+    results = db.query(
+        Genre.genre_name.label("genre"),
+        func.round(cast(func.avg(MovieData.rating_out_of_five), Numeric), 2).label("avg_rating"),
+        func.count(MovieData.id).label("movie_count")
+    )\
+    .join(MovieGenres, Genre.id == MovieGenres.genre_id)\
+    .join(MovieData, MovieGenres.movie_id == MovieData.id)\
+    .filter(MovieData.rating_out_of_five != None)\
+    .group_by(Genre.id, Genre.genre_name)\
+    .order_by(desc("avg_rating"))\
+    .limit(limit)\
+    .all()
 
     return results
