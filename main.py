@@ -80,6 +80,18 @@ def movies_per_year_count(db: Session = Depends(database.get_db)):
     ]
     return data
 
+@app.get('/dashboard/top_genres_by_movies')
+def top_genres_by_movies(db: Session = Depends(database.get_id)):
+    stats = top_genres_by_movies(db)
+    data = [
+        {
+            "genre": row.genre,
+            "count": row.total_movies,
+        }
+        for row in stats
+    ]
+    return data
+
 '''
 Below this, contains all the stuff I'm gonna do with AI,
 So if you're looking for something else, go up.

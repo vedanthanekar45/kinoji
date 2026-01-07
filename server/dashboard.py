@@ -1,8 +1,8 @@
 import os
 import sys
 from sqlalchemy.orm import Session
-from sqlalchemy import func, extract, cast, Integer
-from db.movie_models import MovieData
+from sqlalchemy import func, extract, cast, Integer, asc, desc
+from db.movie_models import MovieData, Genre, MovieGenres
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -69,3 +69,13 @@ def movies_per_year(db: Session):
     ).filter(MovieData.release != None).group_by("year").order_by("year").all()
     return results
 
+# This endpoint gets the Top 10 genres by no. of movies (Pie chart)..
+def top_genres_movies(db: Session, limit: int = 10):
+    results = db.query(
+        Genre.genre_name.label("genre"),
+        func.count(MovieGenres.c.movies_id).label("total_movies")
+    ).join(MovieGenres)\
+    .group_by(Genre.genre_name).order_by(desc("total_movies"))\
+    .limit(limit).all()
+
+    return results
