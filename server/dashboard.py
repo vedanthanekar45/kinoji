@@ -1,7 +1,7 @@
 import os
 import sys
 from sqlalchemy.orm import Session
-from sqlalchemy import func, extract
+from sqlalchemy import func, extract, cast, Integer
 from db.movie_models import MovieData
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -34,4 +34,30 @@ def top_row(db: Session):
     oldest_movie = db.query(MovieData).filter(MovieData.release != None).order_by(MovieData.release.asc()).first()
     return stats, oldest_movie
 
+# This one gets average runtime for each decade..
+def avg_runtime_per_decade(db: Session):
+    results = db.query(
+        (func.floor(cast(extract('year', MovieData.release), Integer) / 10) * 10).label("decade"),
+        func.avg(MovieData.runtime_minutes).label("avg_runtime"),
+        func.count(MovieData.id).label("count")
+    )\
+    .filter(MovieData.release != None)\
+    .group_by("decade")\
+    .order_by("decade")\
+    .all()
 
+    return results
+
+# This one get the average ratings by users for each decade..
+def avg_rating_per_decade(db: Session):
+    results = db.query(
+        (func.floor(cast(extract('year', MovieData.release), Integer) / 10) * 10).label("decade"),
+        func.avg(MovieData.rating_out_of_five).label("avg_rating"),
+        func.count(MovieData.id).label("count")
+    )\
+    .filter(MovieData.release != None)\
+    .group_by("decade")\
+    .order_by("decade")\
+    .all()
+
+    return results
