@@ -2,7 +2,7 @@ import os
 import sys
 from sqlalchemy.orm import Session
 from sqlalchemy import func, extract, cast, Integer, Numeric, asc, desc
-from db.movie_models import MovieData, Genre, MovieGenres
+from db.movie_models import MovieData, Genre, MovieGenres, Country, MovieCountry
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -95,4 +95,16 @@ def top_genres_rating(db: Session, limit: int = 10, min_movies: int = 50):
     .limit(limit)\
     .all()
 
+    return results
+
+# Last 2 endpoints.. I swear
+
+# This endpoint gets Top 10 countries by movie output
+def countries_by_movies(db: Session, limit: int = 10):
+    results = db.query(
+        Country.country_name.label("country"),
+        func.count(MovieCountry.movie_id).label("total_movies")
+    ).join(MovieCountry, Country.id == MovieCountry.country_id_id)\
+    .group_by(Country.country_name).order_by(desc("total_movies"))\
+    .limit(limit).all()
     return results
