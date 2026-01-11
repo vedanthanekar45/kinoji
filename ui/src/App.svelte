@@ -3,6 +3,7 @@
   import Navbar from "./lib/components/Navbar.svelte";
   import HomePage from "./pages/HomePage.svelte";
   import DashboardPage from "./pages/DashboardPage.svelte";
+  import SearchPage from "./pages/SearchPage.svelte";
   import AIAnalysisPage from "./pages/AIAnalysisPage.svelte";
 
   let currentPage = $state('home');
@@ -31,6 +32,8 @@
       <HomePage onNavigate={navigate} />
     {:else if currentPage === 'dashboard'}
       <DashboardPage />
+    {:else if currentPage === 'search'}
+      <SearchPage />
     {:else if currentPage === 'ai-analysis'}
       <AIAnalysisPage />
     {/if}

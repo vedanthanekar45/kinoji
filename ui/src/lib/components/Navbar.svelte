@@ -7,6 +7,7 @@
   const navLinks = [
     { name: 'Home', id: 'home' },
     { name: 'Dashboard', id: 'dashboard' },
+    { name: 'Search', id: 'search' },
     { name: 'AI Analysis', id: 'ai-analysis' }
   ];
 
