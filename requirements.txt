@@ -9,7 +9,7 @@ Cython==3.1.4
 dnspython==2.8.0
 dotenv==0.9.9
 email-validator==2.3.0
-fastapi==0.118.0
+fastapi
 fastapi-cli==0.0.13
 fastapi-cloud-cli==0.3.1
 filelock==3.20.1
@@ -28,9 +28,8 @@ markdown-it-py==4.0.0
 MarkupSafe==3.0.3
 mdurl==0.1.2
 packaging==25.0
-psycopg2-binary==2.9.10
-pydantic==2.11.10
-pydantic_core==2.33.2
+psycopg2-binary
+pydantic
 Pygments==2.19.2
 python-dotenv==1.1.1
 python-multipart==0.0.20
@@ -53,6 +52,5 @@ typing-inspection==0.4.2
 typing_extensions==4.15.0
 urllib3==2.5.0
 uvicorn==0.37.0
-uvloop==0.21.0
-watchfiles==1.1.0
+watchfiles
 websockets==15.0.1
