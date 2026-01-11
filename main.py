@@ -104,6 +104,20 @@ def top_genres_by_rating(db: Session = Depends(database.get_db)):
     ]
     return data
 
+@app.get("/dashboard/top_countries_by_movies")
+def top_countries_by_movies(db: Session = Depends(database.get_db)):
+    stats = top_countries_by_movies(db)
+    data = [
+        {
+            "country": row.country,
+            "count": row.total_movies,
+        }
+        for row in stats
+    ]
+    return data
+
+
+
 '''
 Below this, contains all the stuff I'm gonna do with AI,
 So if you're looking for something else, go up.
