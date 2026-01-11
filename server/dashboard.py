@@ -104,7 +104,7 @@ def countries_by_movies(db: Session, limit: int = 10):
     results = db.query(
         Country.country_name.label("country"),
         func.count(MovieCountry.movie_id).label("total_movies")
-    ).join(MovieCountry, Country.id == MovieCountry.country_id_id)\
+    ).join(MovieCountry, Country.id == MovieCountry.country_id)\
     .group_by(Country.country_name).order_by(desc("total_movies"))\
     .limit(limit).all()
     return results

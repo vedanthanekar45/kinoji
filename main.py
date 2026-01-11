@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 # Backend imports
 from server.search_and_filter import search_and_filter
-from server.dashboard import top_row, format_time, avg_runtime_per_year, avg_rating_per_decade, movies_per_year, top_genres_movies, top_genres_rating
+from server.dashboard import top_row, format_time, avg_runtime_per_year, avg_rating_per_decade, movies_per_year, top_genres_movies, top_genres_rating, countries_by_movies
 from server import db as database
 
 load_dotenv()
@@ -105,8 +105,8 @@ def top_genres_by_rating(db: Session = Depends(database.get_db)):
     return data
 
 @app.get("/dashboard/top_countries_by_movies")
-def top_countries_by_movies(db: Session = Depends(database.get_db)):
-    stats = top_countries_by_movies(db)
+def get_top_countries_by_movies(db: Session = Depends(database.get_db)):
+    stats = countries_by_movies(db)
     data = [
         {
             "country": row.country,
