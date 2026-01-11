@@ -40,10 +40,10 @@
       </button>
       <span class="text-white/60 text-sm max-sm:hidden">or</span>
       <button 
-        onclick={() => onNavigate('curator')}
+        onclick={() => onNavigate('ai-analysis')}
         class="py-3 px-6 rounded-lg text-base font-medium cursor-pointer transition-all duration-200 whitespace-nowrap bg-transparent text-white border border-white/50 hover:bg-white hover:text-black max-sm:w-full max-sm:max-w-[250px]"
       >
-        Curate your own movie
+        AI Analysis
       </button>
     </div>
   </div>

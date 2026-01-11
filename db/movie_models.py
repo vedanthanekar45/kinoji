@@ -34,7 +34,7 @@ class MovieData(Base):
     name = Column(String(200))
     release = Column(Date)
     runtime_minutes = Column(Integer)
-    rating_out_of_five = Column(Float, nullable=True)
+    rating = Column(Float, nullable=True)
     cast = relationship("Actor", secondary="movie_actors", back_populates="movies")
     directors = relationship("Director", secondary="movie_directors", back_populates="movies")
     genres = relationship("Genre", secondary="movie_genres", back_populates="movies")

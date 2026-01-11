@@ -28,7 +28,7 @@ def top_row(db: Session):
     stats = db.query(
         func.count(MovieData.id).label("total_movies"),
         func.sum(MovieData.runtime_minutes).label("total_runtime"),
-        func.avg(MovieData.rating_out_of_five).label("avg_movie_rating")
+        func.avg(MovieData.rating).label("avg_movie_rating")
     ).first()
 
     oldest_movie = db.query(MovieData).filter(MovieData.release != None).order_by(MovieData.release.asc()).first()
@@ -51,7 +51,7 @@ def avg_runtime_per_year(db: Session):
 def avg_rating_per_decade(db: Session):
     results = db.query(
         (func.floor(cast(extract('year', MovieData.release), Integer) / 10) * 10).label("decade"),
-        func.avg(MovieData.rating_out_of_five).label("avg_rating"),
+        func.avg(MovieData.rating).label("avg_rating"),
         func.count(MovieData.id).label("count")
     )\
     .filter(MovieData.release != None)\
@@ -84,12 +84,12 @@ def top_genres_movies(db: Session, limit: int = 10):
 def top_genres_rating(db: Session, limit: int = 10, min_movies: int = 50):
     results = db.query(
         Genre.genre_name.label("genre"),
-        func.round(cast(func.avg(MovieData.rating_out_of_five), Numeric), 2).label("avg_rating"),
+        func.round(cast(func.avg(MovieData.rating), Numeric), 2).label("avg_rating"),
         func.count(MovieData.id).label("movie_count")
     )\
     .join(MovieGenres, Genre.id == MovieGenres.genre_id)\
     .join(MovieData, MovieGenres.movie_id == MovieData.id)\
-    .filter(MovieData.rating_out_of_five != None)\
+    .filter(MovieData.rating != None)\
     .group_by(Genre.id, Genre.genre_name)\
     .order_by(desc("avg_rating"))\
     .limit(limit)\

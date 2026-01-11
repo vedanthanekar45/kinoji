@@ -28,10 +28,10 @@ def search_and_filter (db: Session, title: str=None, genres: List = None, min_ra
         query = query.group_by(MovieData.id)
         query = query.having(func.count(MovieData.id) == len(genres))
     if min_rating:
-        query = query.filter(MovieData.rating_out_of_five >= min_rating)
+        query = query.filter(MovieData.rating >= min_rating)
     if year:
         query = query.filter(extract('year', MovieData.release) == year)
     
-    query = query.order_by(MovieData.rating_out_of_five.desc())
+    query = query.order_by(MovieData.rating.desc())
 
     return query.limit(limit).all()

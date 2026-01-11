@@ -3,8 +3,7 @@
   import Navbar from "./lib/components/Navbar.svelte";
   import HomePage from "./pages/HomePage.svelte";
   import DashboardPage from "./pages/DashboardPage.svelte";
-  import AnalysisPage from "./pages/AnalysisPage.svelte";
-  import CuratorPage from "./pages/CuratorPage.svelte";
+  import AIAnalysisPage from "./pages/AIAnalysisPage.svelte";
 
   let currentPage = $state('home');
 
@@ -32,10 +31,8 @@
       <HomePage onNavigate={navigate} />
     {:else if currentPage === 'dashboard'}
       <DashboardPage />
-    {:else if currentPage === 'analysis'}
-      <AnalysisPage />
-    {:else if currentPage === 'curator'}
-      <CuratorPage />
+    {:else if currentPage === 'ai-analysis'}
+      <AIAnalysisPage />
     {/if}
   </main>
 </div>

@@ -1,113 +1,254 @@
 <script>
-  import MetricCard from '../lib/components/MetricCard.svelte';
-  import ChartCard from '../lib/components/ChartCard.svelte';
+  import { onMount } from 'svelte';
+  import LineChart from '../lib/components/LineChart.svelte';
+  import BarChart from '../lib/components/BarChart.svelte';
+  import DoughnutChart from '../lib/components/DoughnutChart.svelte';
 
-  const metrics = [
-    { title: 'Total Movies', value: '60,124', icon: '🎬', trend: '+2.4%' },
-    { title: 'Avg Runtime', value: '114 min', icon: '⏱️', trend: '+8 min' },
-    { title: 'Top Genre', value: 'Drama', icon: '🎭', trend: '28%' },
-  ];
+  const API_BASE = 'http://127.0.0.1:8000';
 
-  const genreData = [
-    { name: 'Drama', count: 18240, color: 'sky' },
-    { name: 'Comedy', count: 12450, color: 'purple' },
-    { name: 'Action', count: 9870, color: 'emerald' },
-    { name: 'Horror', count: 6230, color: 'rose' },
-    { name: 'Sci-Fi', count: 4120, color: 'amber' },
-  ];
+  // State
+  let loading = $state(true);
+  let topRowStats = $state(null);
+  let moviesPerYear = $state([]);
+  let runtimePerYear = $state([]);
+  let ratingPerDecade = $state([]);
+  let genresByMovies = $state([]);
+  let genresByRating = $state([]);
+  let countriesByMovies = $state([]);
 
-  const recentInsights = [
-    { text: "Movies released in December have 12% higher box office", time: "2h ago" },
-    { text: "Average budget increased 340% since 1990", time: "5h ago" },
-    { text: "Sequels perform 23% worse in ratings", time: "1d ago" },
-  ];
+  // Fetch all data
+  onMount(async () => {
+    try {
+      const [
+        topRowRes,
+        moviesYearRes,
+        runtimeYearRes,
+        ratingDecadeRes,
+        genresMoviesRes,
+        genresRatingRes,
+        countriesRes
+      ] = await Promise.all([
+        fetch(`${API_BASE}/dashboard/top-row`),
+        fetch(`${API_BASE}/dashboard/movies-per-year`),
+        fetch(`${API_BASE}/dashboard/avg-runtime-year`),
+        fetch(`${API_BASE}/dashboard/avg-rating-decade`),
+        fetch(`${API_BASE}/dashboard/top_genres_by_movies`),
+        fetch(`${API_BASE}/dashboard/top_genres_by_rating`),
+        fetch(`${API_BASE}/dashboard/top_countries_by_movies`)
+      ]);
+
+      topRowStats = await topRowRes.json();
+      moviesPerYear = await moviesYearRes.json();
+      runtimePerYear = await runtimeYearRes.json();
+      ratingPerDecade = await ratingDecadeRes.json();
+      genresByMovies = await genresMoviesRes.json();
+      genresByRating = await genresRatingRes.json();
+      countriesByMovies = await countriesRes.json();
+    } catch (err) {
+      console.error('Failed to fetch dashboard data:', err);
+    } finally {
+      loading = false;
+    }
+  });
+
+  // Transform data for charts
+  const moviesYearData = $derived(
+    moviesPerYear
+      .filter(d => d.year >= 1970)
+      .map(d => ({ label: d.year, value: d.count }))
+  );
+
+  const runtimeYearData = $derived(
+    runtimePerYear
+      .filter(d => d.year >= 1970)
+      .map(d => ({ label: d.year, value: d.runtime }))
+  );
+
+  const ratingDecadeData = $derived(
+    ratingPerDecade.map(d => ({ label: `${d.decade}s`, value: d.runtime }))
+  );
+
+  const genreMoviesData = $derived(
+    genresByMovies.map(d => ({ label: d.genre, value: d.count }))
+  );
+
+  const genreRatingData = $derived(
+    genresByRating.map(d => ({ label: d.genre, value: Number(d.average_rating) }))
+  );
+
+  const countryData = $derived(
+    countriesByMovies.map(d => ({ label: d.country, value: d.count }))
+  );
 </script>
 
-<div class="min-h-screen pt-24 pb-12 px-6">
+<div class="min-h-screen pt-20 pb-16 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto">
+    
     <!-- Header -->
-    <div class="mb-10">
-      <h1 class="text-4xl font-medium text-white mb-2">Dashboard</h1>
-      <p class="text-white/50">Overview of 60,000+ movies from 1920-2024</p>
-    </div>
+    <header class="mb-8 sm:mb-12">
+      <h1 class="text-3xl sm:text-4xl font-semibold text-white mb-2">Dashboard</h1>
+      <p class="text-slate-400 text-sm sm:text-base">Your movie collection at a glance</p>
+    </header>
 
-    <!-- Key Metrics -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-      {#each metrics as metric}
-        <MetricCard 
-          title={metric.title} 
-          value={metric.value} 
-          icon={metric.icon}
-          trend={metric.trend}
-        />
-      {/each}
-    </div>
-
-    <!-- Charts Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-      <ChartCard 
-        title="Runtime Creep" 
-        description="Average movie runtime by decade (1950-2024)"
-        type="line"
-      />
-      <ChartCard 
-        title="Genre Popularity" 
-        description="Number of movies by genre"
-        type="bar"
-      />
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Rating Distribution -->
-      <div class="lg:col-span-2">
-        <ChartCard 
-          title="Rating Distribution" 
-          description="Distribution of IMDB ratings (1-10)"
-          type="histogram"
-        />
-      </div>
-
-      <!-- Sidebar Stats -->
-      <div class="bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-6">
-        <h3 class="text-lg font-medium text-white mb-4 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-          Top Genres
-        </h3>
-        <div class="space-y-4">
-          {#each genreData as genre}
-            <div>
-              <div class="flex justify-between text-sm mb-1">
-                <span class="text-white/80">{genre.name}</span>
-                <span class="text-white/50">{genre.count.toLocaleString()}</span>
-              </div>
-              <div class="h-2 bg-white/10 rounded-full overflow-hidden">
-                <div 
-                  class="h-full bg-purple-500 rounded-full transition-all duration-1000"
-                  style="width: {(genre.count / 18240) * 100}%"
-                ></div>
-              </div>
-            </div>
-          {/each}
+    {#if loading}
+      <!-- Loading State -->
+      <div class="flex items-center justify-center h-96">
+        <div class="text-center">
+          <div class="w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
+          <p class="text-slate-400">Loading dashboard...</p>
         </div>
       </div>
-    </div>
-
-    <!-- Recent Insights -->
-    <div class="mt-10">
-      <h3 class="text-lg font-medium text-white mb-4 flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-400">
-          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-        </svg>
-        AI Insights
-      </h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {#each recentInsights as insight}
-          <div class="bg-white/5 border border-white/10 backdrop-blur-md rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer group">
-            <p class="text-sm text-white/70 mb-2 group-hover:text-white transition-colors">{insight.text}</p>
-            <span class="text-xs text-white/40">{insight.time}</span>
+    {:else}
+      
+      <!-- Top Stats Row -->
+      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
+        <article class="bg-gradient-to-br from-purple-500/20 to-purple-600/5 border border-purple-500/20 rounded-2xl p-5 sm:p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🎬</span>
+            <span class="text-xs uppercase tracking-wider text-slate-400 font-medium">Library Size</span>
           </div>
-        {/each}
-      </div>
-    </div>
+          <p class="text-2xl sm:text-3xl font-bold text-white">
+            {topRowStats?.library_size?.toLocaleString() || '—'}
+          </p>
+          <p class="text-xs text-slate-500 mt-1">total movies</p>
+        </article>
+
+        <article class="bg-gradient-to-br from-cyan-500/20 to-cyan-600/5 border border-cyan-500/20 rounded-2xl p-5 sm:p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">⏱️</span>
+            <span class="text-xs uppercase tracking-wider text-slate-400 font-medium">Watch Time</span>
+          </div>
+          <p class="text-xl sm:text-2xl font-bold text-white leading-tight">
+            {topRowStats?.total_watch_time || '—'}
+          </p>
+          <p class="text-xs text-slate-500 mt-1">combined runtime</p>
+        </article>
+
+        <article class="bg-gradient-to-br from-amber-500/20 to-amber-600/5 border border-amber-500/20 rounded-2xl p-5 sm:p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">⭐</span>
+            <span class="text-xs uppercase tracking-wider text-slate-400 font-medium">Avg Rating</span>
+          </div>
+          <p class="text-2xl sm:text-3xl font-bold text-white">
+            {topRowStats?.global_rating || '—'}
+          </p>
+          <p class="text-xs text-slate-500 mt-1">out of 5.0</p>
+        </article>
+
+        <article class="bg-gradient-to-br from-rose-500/20 to-rose-600/5 border border-rose-500/20 rounded-2xl p-5 sm:p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🎞️</span>
+            <span class="text-xs uppercase tracking-wider text-slate-400 font-medium">Oldest Film</span>
+          </div>
+          <p class="text-lg sm:text-xl font-bold text-white leading-tight truncate" title={topRowStats?.oldest_movie?.title}>
+            {topRowStats?.oldest_movie?.title || '—'}
+          </p>
+          <p class="text-xs text-slate-500 mt-1">{topRowStats?.oldest_movie?.year || ''}</p>
+        </article>
+      </section>
+
+      <!-- Main Charts Grid -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
+        
+        <!-- Movies Per Year -->
+        <article class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-5 sm:p-6">
+          <header class="mb-6">
+            <h2 class="text-lg font-medium text-white">Movie Releases Over Time</h2>
+            <p class="text-sm text-slate-500">Number of movies released each year since 1970</p>
+          </header>
+          <div class="h-64 sm:h-72">
+            {#if moviesYearData.length}
+              <LineChart data={moviesYearData} title="Movies" color="#a855f7" />
+            {:else}
+              <div class="h-full flex items-center justify-center text-slate-500">No data</div>
+            {/if}
+          </div>
+        </article>
+
+        <!-- Average Runtime Per Year -->
+        <article class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-5 sm:p-6">
+          <header class="mb-6">
+            <h2 class="text-lg font-medium text-white">Runtime Trend</h2>
+            <p class="text-sm text-slate-500">Average movie runtime in minutes by year</p>
+          </header>
+          <div class="h-64 sm:h-72">
+            {#if runtimeYearData.length}
+              <LineChart data={runtimeYearData} title="Minutes" color="#06b6d4" />
+            {:else}
+              <div class="h-full flex items-center justify-center text-slate-500">No data</div>
+            {/if}
+          </div>
+        </article>
+      </section>
+
+      <!-- Secondary Charts -->
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
+        
+        <!-- Ratings by Decade -->
+        <article class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-5 sm:p-6">
+          <header class="mb-6">
+            <h2 class="text-lg font-medium text-white">Ratings by Decade</h2>
+            <p class="text-sm text-slate-500">How movie ratings evolved</p>
+          </header>
+          <div class="h-56 sm:h-64">
+            {#if ratingDecadeData.length}
+              <BarChart data={ratingDecadeData} title="Avg Rating" colors={['#f59e0b']} />
+            {:else}
+              <div class="h-full flex items-center justify-center text-slate-500">No data</div>
+            {/if}
+          </div>
+        </article>
+
+        <!-- Top Genres by Movies -->
+        <article class="lg:col-span-2 bg-slate-900/50 border border-slate-700/50 rounded-2xl p-5 sm:p-6">
+          <header class="mb-6">
+            <h2 class="text-lg font-medium text-white">Most Popular Genres</h2>
+            <p class="text-sm text-slate-500">Top 10 genres by number of movies</p>
+          </header>
+          <div class="h-56 sm:h-64">
+            {#if genreMoviesData.length}
+              <BarChart data={genreMoviesData} title="Movies" />
+            {:else}
+              <div class="h-full flex items-center justify-center text-slate-500">No data</div>
+            {/if}
+          </div>
+        </article>
+      </section>
+
+      <!-- Bottom Row -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        
+        <!-- Genre Ratings -->
+        <article class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-5 sm:p-6">
+          <header class="mb-6">
+            <h2 class="text-lg font-medium text-white">Highest Rated Genres</h2>
+            <p class="text-sm text-slate-500">Average ratings by genre</p>
+          </header>
+          <div class="h-64 sm:h-72">
+            {#if genreRatingData.length}
+              <BarChart data={genreRatingData} title="Rating" horizontal={true} colors={['#10b981']} />
+            {:else}
+              <div class="h-full flex items-center justify-center text-slate-500">No data</div>
+            {/if}
+          </div>
+        </article>
+
+        <!-- Top Countries -->
+        <article class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-5 sm:p-6">
+          <header class="mb-6">
+            <h2 class="text-lg font-medium text-white">Movies by Country</h2>
+            <p class="text-sm text-slate-500">Top producing countries</p>
+          </header>
+          <div class="h-64 sm:h-72">
+            {#if countryData.length}
+              <DoughnutChart data={countryData} title="Movies" />
+            {:else}
+              <div class="h-full flex items-center justify-center text-slate-500">No data</div>
+            {/if}
+          </div>
+        </article>
+      </section>
+
+    {/if}
   </div>
 </div>

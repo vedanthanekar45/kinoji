@@ -7,8 +7,7 @@
   const navLinks = [
     { name: 'Home', id: 'home' },
     { name: 'Dashboard', id: 'dashboard' },
-    { name: 'AI Curator', id: 'curator' },
-    { name: 'Analysis', id: 'analysis' }
+    { name: 'AI Analysis', id: 'ai-analysis' }
   ];
 
   function handleScroll() {
