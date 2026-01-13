@@ -1,6 +1,20 @@
 <script>
-  /** @type {{ onNavigate?: (page: string) => void }} */
+  /** @type {{ onNavigate?: (page: string, query?: string) => void }} */
   let { onNavigate = () => {} } = $props();
+  
+  let aiQuery = $state('');
+  
+  function handleAiSubmit() {
+    if (aiQuery.trim()) {
+      onNavigate('ai-analysis', aiQuery.trim());
+    }
+  }
+  
+  function handleKeydown(e) {
+    if (e.key === 'Enter') {
+      handleAiSubmit();
+    }
+  }
 </script>
 
 <main class="w-screen h-screen bg-[url('/kinoji.jpg')] max-sm:bg-[url('/kinoji_mob.png')] bg-cover bg-center bg-no-repeat flex items-center justify-center relative overflow-hidden font-['Funnel_Display',sans-serif]">
@@ -26,8 +40,8 @@
     
     <div class="flex items-center justify-center mb-6 px-4">
       <div class="relative w-full max-w-[600px]">
-        <input type="text" placeholder="Generate insights with AI.." class="w-full py-3 pr-12 pl-4 max-sm:py-2.5 max-sm:px-3 max-sm:text-sm border border-white/30 rounded-lg bg-white/10 text-white text-base outline-none backdrop-blur-sm placeholder:text-white/50" />
-        <button class="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent border-none text-white/50 hover:text-white cursor-pointer p-1 flex items-center justify-center transition-colors duration-200 ease-in-out" aria-label="Send">
+        <input type="text" bind:value={aiQuery} onkeydown={handleKeydown} placeholder="Generate insights with AI.." class="w-full py-3 pr-12 pl-4 max-sm:py-2.5 max-sm:px-3 max-sm:text-sm border border-white/30 rounded-lg bg-white/10 text-white text-base outline-none backdrop-blur-sm placeholder:text-white/50" />
+        <button onclick={handleAiSubmit} class="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent border-none text-white/50 hover:text-white cursor-pointer p-1 flex items-center justify-center transition-colors duration-200 ease-in-out" aria-label="Send">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="22" y1="2" x2="11" y2="13"></line>
             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>

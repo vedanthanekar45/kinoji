@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Query
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from dotenv import load_dotenv
@@ -36,7 +36,7 @@ async def root():
 @app.get("/search")
 def search_filter_endpoint(
     title: Optional[str] = None,
-    genres: Optional[List[str]] = None,
+    genres: Optional[List[str]] = Query(default=None),
     min_rating: Optional[float] = None,
     year: Optional[int] = None,
     db: Session = Depends(database.get_db)

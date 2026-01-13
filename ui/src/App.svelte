@@ -7,9 +7,13 @@
   import AIAnalysisPage from "./pages/AIAnalysisPage.svelte";
 
   let currentPage = $state('home');
+  let initialAiQuery = $state('');
 
-  function navigate(page) {
+  function navigate(page, query = '') {
     currentPage = page;
+    if (page === 'ai-analysis') {
+      initialAiQuery = query;
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
@@ -35,7 +39,7 @@
     {:else if currentPage === 'search'}
       <SearchPage />
     {:else if currentPage === 'ai-analysis'}
-      <AIAnalysisPage />
+      <AIAnalysisPage initialQuery={initialAiQuery} />
     {/if}
   </main>
 </div>

@@ -2,10 +2,20 @@
   import DynamicChart from '../lib/components/DynamicChart.svelte';
   const API_BASE = 'https://kinoji.duckdns.org';
 
+  let { initialQuery = '' } = $props();
+
   let query = $state('');
   let isLoading = $state(false);
   let result = $state(null);
   let error = $state('');
+
+  // Handle initial query from homepage
+  $effect(() => {
+    if (initialQuery) {
+      query = initialQuery;
+      handleSubmit();
+    }
+  });
 
   const suggestions = [
     "How many movies were released each year since 2000?",
@@ -13,16 +23,6 @@
     "Show average rating by decade",
     "Which studios produced the most movies?",
     "Top 10 highest rated movies of all time"
-  ];
-
-  // Blue Ocean data
-  const genreOpportunities = [
-    { g1: 'Horror', g2: 'Musical', count: 12, opportunity: 'high' },
-    { g1: 'Sci-Fi', g2: 'Western', count: 8, opportunity: 'high' },
-    { g1: 'Fantasy', g2: 'Documentary', count: 3, opportunity: 'high' },
-    { g1: 'Romance', g2: 'Horror', count: 24, opportunity: 'high' },
-    { g1: 'Comedy', g2: 'War', count: 18, opportunity: 'medium' },
-    { g1: 'Animation', g2: 'Noir', count: 5, opportunity: 'high' },
   ];
 
   function handleSuggestionClick(suggestion) {
@@ -212,35 +212,6 @@
             </div>
           </div>
         {/if}
-      </section>
-    {/if}
-
-    <!-- Blue Ocean Section (shown when no result) -->
-    {#if !result && !isLoading}
-      <section>
-        <div class="flex items-center gap-2 mb-4">
-          <span class="text-lg">🌊</span>
-          <h2 class="text-base font-medium text-white">Blue Ocean Detector</h2>
-        </div>
-        <p class="text-xs text-slate-500 mb-4">Genre combinations with untapped potential</p>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {#each genreOpportunities as combo}
-            <article class="bg-slate-900/50 border border-slate-700/50 rounded-xl p-4 hover:border-purple-500/30 transition-all cursor-pointer">
-              <div class="flex items-center gap-2 mb-3">
-                <span class="px-2 py-1 rounded-md bg-purple-500/20 text-purple-400 text-xs font-medium">{combo.g1}</span>
-                <span class="text-slate-600">×</span>
-                <span class="px-2 py-1 rounded-md bg-slate-700/60 text-slate-300 text-xs font-medium">{combo.g2}</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-slate-500">Only {combo.count} movies exist</span>
-                <span class="text-xs px-2 py-0.5 rounded-full {combo.opportunity === 'high' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
-                  {combo.opportunity === 'high' ? '🔥 High' : '📊 Medium'} opportunity
-                </span>
-              </div>
-            </article>
-          {/each}
-        </div>
       </section>
     {/if}
 

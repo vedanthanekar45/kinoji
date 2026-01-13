@@ -3,8 +3,8 @@ import re
 import sys
 from typing import List
 from sqlalchemy.orm import Session
-from sqlalchemy import func, extract
-from db.movie_models import MovieData, Genre
+from sqlalchemy import func, extract, and_
+from db.movie_models import MovieData, Genre, MovieGenres
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -23,10 +23,14 @@ def search_and_filter (db: Session, title: str=None, genres: List = None, min_ra
             .ilike(f"%{clean_input}%")
         )
     if genres:
-        query = query.join(MovieData.genres)
-        query = query.filter(func.lower(Genre.genre_name).in_([g.lower() for g in genres]))
-        query = query.group_by(MovieData.id)
-        query = query.having(func.count(MovieData.id) == len(genres))
+        # Subquery to find movies that have ALL the requested genres
+        for genre in genres:
+            genre_subquery = (
+                db.query(MovieGenres.movie_id)
+                .join(Genre, MovieGenres.genre_id == Genre.id)
+                .filter(func.lower(Genre.genre_name) == genre.lower())
+            )
+            query = query.filter(MovieData.id.in_(genre_subquery))
     if min_rating:
         query = query.filter(MovieData.rating >= min_rating)
     if year:
