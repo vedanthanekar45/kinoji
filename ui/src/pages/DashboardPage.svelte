@@ -104,7 +104,7 @@
       <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
         <article class="bg-gradient-to-br from-purple-500/20 to-purple-600/5 border border-purple-500/20 rounded-2xl p-5 sm:p-6">
           <div class="flex items-center gap-3 mb-3">
-            <span class="text-2xl">🎬</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-400"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg>
             <span class="text-xs uppercase tracking-wider text-slate-400 font-medium">Library Size</span>
           </div>
           <p class="text-2xl sm:text-3xl font-bold text-white">
@@ -115,7 +115,7 @@
 
         <article class="bg-gradient-to-br from-cyan-500/20 to-cyan-600/5 border border-cyan-500/20 rounded-2xl p-5 sm:p-6">
           <div class="flex items-center gap-3 mb-3">
-            <span class="text-2xl">⏱️</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span class="text-xs uppercase tracking-wider text-slate-400 font-medium">Watch Time</span>
           </div>
           <p class="text-xl sm:text-2xl font-bold text-white leading-tight">
@@ -126,7 +126,7 @@
 
         <article class="bg-gradient-to-br from-amber-500/20 to-amber-600/5 border border-amber-500/20 rounded-2xl p-5 sm:p-6">
           <div class="flex items-center gap-3 mb-3">
-            <span class="text-2xl">⭐</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="text-amber-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             <span class="text-xs uppercase tracking-wider text-slate-400 font-medium">Avg Rating</span>
           </div>
           <p class="text-2xl sm:text-3xl font-bold text-white">
@@ -137,7 +137,7 @@
 
         <article class="bg-gradient-to-br from-rose-500/20 to-rose-600/5 border border-rose-500/20 rounded-2xl p-5 sm:p-6">
           <div class="flex items-center gap-3 mb-3">
-            <span class="text-2xl">🎞️</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-rose-400"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
             <span class="text-xs uppercase tracking-wider text-slate-400 font-medium">Oldest Film</span>
           </div>
           <p class="text-lg sm:text-xl font-bold text-white leading-tight truncate" title={topRowStats?.oldest_movie?.title}>

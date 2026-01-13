@@ -181,11 +181,11 @@
               class="w-full py-2.5 px-3 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm outline-none focus:border-purple-500/50"
             >
               <option value="">Any rating</option>
-              <option value="4.5">4.5+ ⭐</option>
-              <option value="4.0">4.0+ ⭐</option>
-              <option value="3.5">3.5+ ⭐</option>
-              <option value="3.0">3.0+ ⭐</option>
-              <option value="2.5">2.5+ ⭐</option>
+              <option value="4.5">4.5+ stars</option>
+              <option value="4.0">4.0+ stars</option>
+              <option value="3.5">3.5+ stars</option>
+              <option value="3.0">3.0+ stars</option>
+              <option value="2.5">2.5+ stars</option>
             </select>
           </div>
 
@@ -249,7 +249,8 @@
                   <td class="py-4 px-5">
                     {#if movie.rating}
                       <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-400 text-sm font-medium">
-                        ⭐ {movie.rating.toFixed(1)}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        {movie.rating.toFixed(1)}
                       </span>
                     {:else}
                       <span class="text-slate-500">—</span>
