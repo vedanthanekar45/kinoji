@@ -8,7 +8,7 @@ While existing platforms like IMDb or TMDB provide raw data, they lack the tools
 
 ### Data Collection Strategy
 
-The core value of this project lies in its dataset. The Movie Database (TMDB) contains over 2 million records, but the majority are "noise"—test data, adult content, or obscure clips with zero cultural relevance.
+The core value of this project lies in its dataset. The Movie Database (TMDB) contains over 2 million records, but the majority are noise, test data, adult content, or obscure clips with zero cultural relevance.
 
 To build a high-signal dataset, I implemented a targeted harvesting pipeline:
 
