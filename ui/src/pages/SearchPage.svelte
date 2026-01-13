@@ -157,7 +157,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
           <!-- Genres -->
           <div>
-            <label class="block text-xs text-slate-500 mb-2">Genres</label>
+            <span class="block text-xs text-slate-500 mb-2">Genres</span>
             <div class="flex flex-wrap gap-2 max-h-32 overflow-y-auto pr-2">
               {#each genres as genre}
                 <button
@@ -174,8 +174,9 @@
 
           <!-- Min Rating -->
           <div>
-            <label class="block text-xs text-slate-500 mb-2">Minimum Rating</label>
+            <label for="rating-select" class="block text-xs text-slate-500 mb-2">Minimum Rating</label>
             <select
+              id="rating-select"
               bind:value={minRating}
               class="w-full py-2.5 px-3 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm outline-none focus:border-purple-500/50"
             >
@@ -190,8 +191,9 @@
 
           <!-- Year -->
           <div>
-            <label class="block text-xs text-slate-500 mb-2">Release Year</label>
+            <label for="year-select" class="block text-xs text-slate-500 mb-2">Release Year</label>
             <select
+              id="year-select"
               bind:value={selectedYear}
               class="w-full py-2.5 px-3 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm outline-none focus:border-purple-500/50"
             >
