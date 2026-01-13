@@ -1,7 +1,6 @@
 <script>
   import DynamicChart from '../lib/components/DynamicChart.svelte';
-
-  const API_BASE = 'http://127.0.0.1:8000';
+  const API_BASE = 'https://kinoji.duckdns.org';
 
   let query = $state('');
   let isLoading = $state(false);

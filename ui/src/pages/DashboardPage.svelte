@@ -4,7 +4,7 @@
   import BarChart from '../lib/components/BarChart.svelte';
   import DoughnutChart from '../lib/components/DoughnutChart.svelte';
 
-  const API_BASE = 'http://127.0.0.1:8000';
+  const API_BASE = 'https://kinoji.duckdns.org';  
 
   // State
   let loading = $state(true);
